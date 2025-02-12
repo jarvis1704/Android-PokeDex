@@ -1,8 +1,10 @@
 package com.biprangshu.pokedex.pokemon_screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +20,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,6 +56,7 @@ fun PokemonListScreen(modifier: Modifier = Modifier, navController: NavControlle
                 }
             }
             Spacer(Modifier.height(8.dp))
+            SearchBar(onSearch = {})
         }
     }
 }
@@ -59,23 +64,23 @@ fun PokemonListScreen(modifier: Modifier = Modifier, navController: NavControlle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(modifier: Modifier = Modifier, onSearch: (String)-> Unit= {}) {
+fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit = {}) {
     var text by remember {
         mutableStateOf("")
     }
     var active by remember { mutableStateOf(false) }
 
-    androidx.compose.material3.SearchBar(
+    SearchBar(
         query = text,
         onQueryChange = {
-            text=it
+            text = it
             onSearch(it)
         },
-        onSearch = { active=false },
+        onSearch = { active = false },
         active = active,
-        onActiveChange = {active=it},
-        modifier = TODO(),
-        enabled = TODO(),
+        onActiveChange = { active = it },
+        modifier = Modifier.fillMaxWidth(),  // Replace TODO()
+        enabled = true,
         placeholder = { Text("Search for Pokemon") },
         leadingIcon = {
             if (active) {
@@ -83,23 +88,22 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String)-> Unit= {}) {
                     Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                 }
             } else {
-            Icon(Icons.Filled.Search, contentDescription = "Search")
+                Icon(Icons.Filled.Search, contentDescription = "Search")
             }
         },
         trailingIcon = {
-            if(text.isNotEmpty()){
-                IconButton({text = ""}) {
+            if(text.isNotEmpty()) {
+                IconButton(onClick = { text = "" }) {  // Fixed onClick parameter
                     Icon(Icons.Filled.Close, contentDescription = "Clear")
                 }
             }
         },
-        shape = TODO(),
-        colors = TODO(),
-        tonalElevation = TODO(),
-        shadowElevation = TODO(),
-        windowInsets = TODO(),
-        interactionSource = TODO()
+        shape = MaterialTheme.shapes.medium,
+        colors = SearchBarDefaults.colors(),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        windowInsets = SearchBarDefaults.windowInsets,
     ) {
-
+        Text("Bulbasaur")
     }
 }
