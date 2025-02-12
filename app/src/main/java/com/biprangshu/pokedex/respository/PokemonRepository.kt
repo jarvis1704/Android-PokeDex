@@ -1,7 +1,9 @@
 package com.biprangshu.pokedex.respository
 
+import com.biprangshu.pokedex.remote.PokeApi
+import com.biprangshu.pokedex.remote.responses.Pokemon
+import com.biprangshu.pokedex.remote.responses.PokemonList
 import com.biprangshu.pokedex.util.Resource
-import com.google.rpc.context.AttributeContext
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
@@ -12,7 +14,7 @@ class PokemonRepository @Inject constructor(
 
     suspend fun getPokemonList(limit: Int, offset: Int): Resource<PokemonList> {
         val response = try {
-            api.getPokemonList(limit, offset)
+            api.GetPokemonList(limit, offset)
         } catch(e: Exception) {
             return Resource.Error("An unknown error occured.")
         }
@@ -21,7 +23,7 @@ class PokemonRepository @Inject constructor(
 
     suspend fun getPokemonInfo(pokemonName: String): Resource<Pokemon> {
         val response = try {
-            api.getPokemonInfo(pokemonName)
+            api.GetPokemonInfo(pokemonName)
         } catch(e: Exception) {
             return Resource.Error("An unknown error occured.")
         }
