@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -142,20 +143,30 @@ fun PokeDexEntry(modifier: Modifier = Modifier, entry: PokedexListEntry, navCont
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.padding(16.dp).shadow(8.dp, RoundedCornerShape(8.dp)).clip(
-            RoundedCornerShape(8.dp)
-        ).aspectRatio(1f).background(
-            Brush.verticalGradient(listOf(
-                dominantColor,
-                defaultDominantColor
-            ))
-        ).clickable {
-            navController.navigate("pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}")
-        },
+        modifier = Modifier
+            .padding(16.dp)
+            .shadow(8.dp, RoundedCornerShape(8.dp))
+            .clip(
+                RoundedCornerShape(8.dp)
+            )
+            .aspectRatio(1f)
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        dominantColor,
+                        defaultDominantColor
+                    )
+                )
+            )
+            .clickable {
+                navController.navigate("pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}")
+            },
 
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(8.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -181,5 +192,48 @@ fun PokeDexEntry(modifier: Modifier = Modifier, entry: PokedexListEntry, navCont
             Spacer(Modifier.height(4.dp))
             Text(text = entry.pokemonName, fontFamily = RubricMono, fontWeight = FontWeight.Medium, fontSize = 16.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         }
+    }
+}
+
+@Composable
+fun PokeDexRow(
+    modifier: Modifier = Modifier,
+    rowIndex: Int,
+    entries: List<PokedexListEntry>,
+    navController: NavController
+) {
+    val indices = remember(rowIndex) {
+        val firstIndex = rowIndex * 2
+        val secondIndex = firstIndex + 1
+        firstIndex to secondIndex
+    }
+
+
+    val secondEntry = remember(indices.second, entries) {
+        entries.getOrNull(indices.second)
+    }
+
+    Column(modifier = modifier) {
+        Row {
+
+            PokeDexEntry(
+                entry = entries[indices.first],
+                navController = navController,
+                modifier = Modifier.weight(1f)
+            )
+
+            Spacer(Modifier.width(16.dp))
+
+            if (secondEntry != null) {
+                PokeDexEntry(
+                    entry = secondEntry,
+                    navController = navController,
+                    modifier = Modifier.weight(1f)
+                )
+            } else {
+                Spacer(Modifier.weight(1f))
+            }
+        }
+        Spacer(Modifier.height(16.dp))
     }
 }
