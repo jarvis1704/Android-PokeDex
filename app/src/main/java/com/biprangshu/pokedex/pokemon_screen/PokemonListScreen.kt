@@ -1,10 +1,8 @@
 package com.biprangshu.pokedex.pokemon_screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,11 +29,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.biprangshu.pokedex.R
+
 
 @Composable
 fun PokemonListScreen(modifier: Modifier = Modifier, navController: NavController) {
@@ -79,7 +76,7 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit = {}) {
         onSearch = { active = false },
         active = active,
         onActiveChange = { active = it },
-        modifier = Modifier.fillMaxWidth(),  // Replace TODO()
+        modifier = Modifier.fillMaxWidth(),
         enabled = true,
         placeholder = { Text("Search for Pokemon") },
         leadingIcon = {
