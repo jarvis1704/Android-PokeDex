@@ -1,19 +1,27 @@
 package com.biprangshu.pokedex.pokemon_screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,11 +35,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.Coil
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.request.ImageRequest
 import com.biprangshu.pokedex.R
+import com.biprangshu.pokedex.ui.theme.RubricMono
+import com.biprangshu.pokedex.viewmodels.PokedexListEntry
+import com.biprangshu.pokedex.viewmodels.PokemonListViewmodel
 
 
 @Composable
@@ -41,7 +67,9 @@ fun PokemonListScreen(modifier: Modifier = Modifier, navController: NavControlle
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().statusBarsPadding()
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
         ) {
             Row(
                 modifier= Modifier.fillMaxWidth(),
@@ -102,5 +130,56 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit = {}) {
         windowInsets = SearchBarDefaults.windowInsets,
     ) {
         Text("Bulbasaur")
+    }
+}
+
+@Composable
+fun PokeDexEntry(modifier: Modifier = Modifier, entry: PokedexListEntry, navController: NavController, viewModel: PokemonListViewmodel= hiltViewModel()) {
+    val defaultDominantColor= MaterialTheme.colorScheme.surface
+    var dominantColor by remember {
+        mutableStateOf(defaultDominantColor)
+    }
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.padding(16.dp).shadow(8.dp, RoundedCornerShape(8.dp)).clip(
+            RoundedCornerShape(8.dp)
+        ).aspectRatio(1f).background(
+            Brush.verticalGradient(listOf(
+                dominantColor,
+                defaultDominantColor
+            ))
+        ).clickable {
+            navController.navigate("pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}")
+        },
+
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(8.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(120.dp)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(entry.imageUrl)
+                        .target { viewModel.CalcDominantColor(it) { dominantColor = it } }
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = entry.pokemonName,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = MaterialTheme.colorScheme.primary,
+                    strokeWidth = 2.dp
+                )
+            }
+            Spacer(Modifier.height(4.dp))
+            Text(text = entry.pokemonName, fontFamily = RubricMono, fontWeight = FontWeight.Medium, fontSize = 16.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+        }
     }
 }
