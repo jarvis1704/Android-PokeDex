@@ -126,7 +126,12 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit = {}) {
         },
         trailingIcon = {
             if(text.isNotEmpty()) {
-                IconButton(onClick = { text = "" }) {  // Fixed onClick parameter
+                IconButton(
+                    onClick = {
+                        text = ""
+                        onSearch("")
+                    }
+                ) {
                     Icon(Icons.Filled.Close, contentDescription = "Clear")
                 }
             }
