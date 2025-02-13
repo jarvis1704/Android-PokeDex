@@ -157,7 +157,7 @@ fun PokemonList(modifier: Modifier = Modifier, navController: NavController, vie
         val itemCount = if(pokemonList.size%2==0) pokemonList.size/2 else pokemonList.size/2+1
 
         items(itemCount){
-            if(it>=itemCount-1 && !isEndReached){
+            if(it>=itemCount-1 && !isEndReached && !isLoading){
                 viewModel.LoadPokemonPaginated()
             }
             PokeDexRow(rowIndex = it, navController = navController, entries = pokemonList)
