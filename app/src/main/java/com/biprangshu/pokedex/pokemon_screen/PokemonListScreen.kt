@@ -13,11 +13,14 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -27,12 +30,15 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -143,7 +149,70 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit = {}) {
         shadowElevation = 16.dp,
         windowInsets = SearchBarDefaults.windowInsets,
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                "Popular Searches",
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
 
+            // Popular Pokemon suggestions
+            val popularPokemon = listOf(
+                "Pikachu" to "Electric type Pokemon",
+                "Charizard" to "Fire/Flying type Pokemon",
+                "Mewtwo" to "Legendary Psychic Pokemon",
+                "Bulbasaur" to "Grass/Poison type Pokemon",
+                "Gyarados" to "Water/Flying type Pokemon"
+            )
+
+            popularPokemon.forEach { (name, description) ->
+                ListItem(
+                    headlineContent = { Text(name) },
+                    supportingContent = { Text(description) },
+                    leadingContent = {
+                        Icon(
+                            Icons.Filled.Search,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    modifier = Modifier.clickable {
+                        text = name
+                        onSearch(name)
+                        active = false
+                    }
+                )
+            }
+
+            Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+            Text(
+                "Search by Type",
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            // Pokemon type suggestions
+            val types = listOf("Fire", "Water", "Grass", "Electric", "Psychic")
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(types) { type ->
+                    SuggestionChip(
+                        onClick = {
+                            text = type
+                            onSearch(type)
+                            active = false
+                        },
+                        label = { Text(text = type) }
+                    )
+                }
+            }
+        }
     }
 }
 
