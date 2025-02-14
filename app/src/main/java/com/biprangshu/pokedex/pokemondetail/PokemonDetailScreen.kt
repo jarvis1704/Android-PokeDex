@@ -206,7 +206,8 @@ fun PokemonTypeSection(types: List<Type>) {
                 Text(
                     text = type.type.name.capitalize(Locale.ROOT),
                     color = Color.White,
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    fontFamily = RussoOne
                 )
             }
         }
@@ -263,7 +264,8 @@ fun PokemonDetailDataItem(
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "$dataValue$dataUnit",
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
+            fontFamily = RussoOne
         )
     }
 }
@@ -318,11 +320,13 @@ fun PokemonStat(
         ) {
             Text(
                 text = statName,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontFamily = RussoOne
             )
             Text(
                 text = (curPercent.value * statMaxValue).toInt().toString(),
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontFamily = RussoOne
             )
         }
     }
@@ -342,9 +346,10 @@ fun PokemonBaseStats(
         Text(
             text = "Base stats:",
             fontSize = 20.sp,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
+            fontFamily = RussoOne
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         for(i in pokemonInfo.stats.indices) {
             val stat = pokemonInfo.stats[i]
