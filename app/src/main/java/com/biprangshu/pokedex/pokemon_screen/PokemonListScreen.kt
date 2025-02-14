@@ -76,6 +76,7 @@ fun PokemonListScreen(modifier: Modifier = Modifier, navController: NavControlle
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
+                .padding(16.dp)
         ) {
             Row(
                 modifier= Modifier.fillMaxWidth(),
@@ -136,13 +137,13 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit = {}) {
                 }
             }
         },
-        shape = MaterialTheme.shapes.medium,
+        shape = RoundedCornerShape(16.dp),
         colors = SearchBarDefaults.colors(),
-        tonalElevation = 0.dp,
-        shadowElevation = 0.dp,
+        tonalElevation = 16.dp,
+        shadowElevation = 16.dp,
         windowInsets = SearchBarDefaults.windowInsets,
     ) {
-        Text("Bulbasaur")
+
     }
 }
 
@@ -267,39 +268,25 @@ fun PokeDexRow(
     entries: List<PokedexListEntry>,
     navController: NavController
 ) {
-    val indices = remember(rowIndex) {
-        val firstIndex = rowIndex * 2
-        val secondIndex = firstIndex + 1
-        firstIndex to secondIndex
-    }
-
-
-    val secondEntry = remember(indices.second, entries) {
-        entries.getOrNull(indices.second)
-    }
-
-    Column(modifier = modifier) {
+    Column {
         Row {
-
             PokeDexEntry(
-                entry = entries[indices.first],
+                entry = entries[rowIndex * 2],
                 navController = navController,
                 modifier = Modifier.weight(1f)
             )
-
-            Spacer(Modifier.width(16.dp))
-
-            if (secondEntry != null) {
+            Spacer(modifier = Modifier.width(16.dp))
+            if(entries.size >= rowIndex * 2 + 2) {
                 PokeDexEntry(
-                    entry = secondEntry,
+                    entry = entries[rowIndex * 2 + 1],
                     navController = navController,
                     modifier = Modifier.weight(1f)
                 )
             } else {
-                Spacer(Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(1f))
             }
         }
-        Spacer(Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
