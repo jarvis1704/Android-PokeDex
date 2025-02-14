@@ -6,14 +6,17 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.toLowerCase
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.biprangshu.pokedex.pokemon_screen.PokemonListScreen
+import com.biprangshu.pokedex.pokemondetail.PokemonDetailScreen
 import com.biprangshu.pokedex.ui.theme.PokeDexTheme
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -48,6 +51,11 @@ class MainActivity : ComponentActivity() {
                         val pokemonName = remember {
                             it.arguments?.getString("pokemonName")
                         }
+                        PokemonDetailScreen(
+                            dominantColor = dominantColor,
+                            pokemonName = pokemonName?.lowercase(Locale.ROOT) ?: "",
+                            navController = navController
+                        )
                     }
                 }
             }
