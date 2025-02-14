@@ -148,48 +148,76 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit = {}) {
 }
 
 @Composable
-fun PokemonList(modifier: Modifier = Modifier, navController: NavController, viewModel: PokemonListViewmodel= hiltViewModel()) {
-    val pokemonList by remember {
-        viewModel.pokemonList
-    }
-
+fun PokemonList(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    viewModel: PokemonListViewmodel = hiltViewModel()
+) {
+    val pokemonList by remember { viewModel.pokemonList }
     val isEndReached by remember { viewModel.isEndReached }
     val isLoading by remember { viewModel.isLoading }
     val loadError by remember { viewModel.loadError }
-
     val isSearching by remember { viewModel.isSearching }
 
     LazyColumn(
-        contentPadding = PaddingValues(16.dp)
+        contentPadding = PaddingValues(8.dp)
     ) {
-        val itemCount = if(pokemonList.size%2==0) pokemonList.size/2 else pokemonList.size/2+1
-
-        items(itemCount){
-            if(it>=itemCount-1 && !isEndReached && !isLoading && !isSearching){
+        val itemCount = pokemonList.size
+        items(count = (itemCount + 1) / 2) { rowIndex ->
+            if (rowIndex >= ((itemCount - 1) / 2) && !isEndReached && !isLoading && !isSearching) {
                 viewModel.LoadPokemonPaginated()
             }
-            PokeDexRow(rowIndex = it, navController = navController, entries = pokemonList)
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Box(modifier = Modifier.weight(1f)) {
+                    if (rowIndex * 2 < itemCount) {
+                        PokeDexEntry(
+                            entry = pokemonList[rowIndex * 2],
+                            navController = navController
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Box(modifier = Modifier.weight(1f)) {
+                    if (rowIndex * 2 + 1 < itemCount) {
+                        PokeDexEntry(
+                            entry = pokemonList[rowIndex * 2 + 1],
+                            navController = navController
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
-    ){
-        if(isLoading){
+    ) {
+        if (isLoading) {
             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-        }else if(loadError.isNotEmpty()){
+        } else if (loadError.isNotEmpty()) {
             RetrySection(error = loadError) {
                 viewModel.LoadPokemonPaginated()
             }
         }
     }
-
 }
 
 @Composable
-fun PokeDexEntry(modifier: Modifier = Modifier, entry: PokedexListEntry, navController: NavController, viewModel: PokemonListViewmodel= hiltViewModel()) {
-    val defaultDominantColor= MaterialTheme.colorScheme.surface
+fun PokeDexEntry(
+    modifier: Modifier = Modifier,
+    entry: PokedexListEntry,
+    navController: NavController,
+    viewModel: PokemonListViewmodel = hiltViewModel()
+) {
+    val defaultDominantColor = MaterialTheme.colorScheme.surface
     var dominantColor by remember {
         mutableStateOf(defaultDominantColor)
     }
@@ -201,12 +229,11 @@ fun PokeDexEntry(modifier: Modifier = Modifier, entry: PokedexListEntry, navCont
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .padding(16.dp)
-            .shadow(8.dp, RoundedCornerShape(8.dp))
-            .clip(
-                RoundedCornerShape(8.dp)
-            )
-            .aspectRatio(1f)
+            .padding(8.dp)
+            .shadow(5.dp, RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(16.dp))
+            .aspectRatio(0.7f)
+            .fillMaxWidth()
             .background(
                 Brush.verticalGradient(
                     listOf(
@@ -217,17 +244,26 @@ fun PokeDexEntry(modifier: Modifier = Modifier, entry: PokedexListEntry, navCont
             )
             .clickable {
                 navController.navigate("pokemon_detail_screen/${dominantColor.toArgb()}/${entry.pokemonName}")
-            },
-
+            }
     ) {
         Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp)
+                .padding(4.dp)  // Reduced padding for better space utilization
         ) {
+            // Number of the Pokemon
+            Text(
+                text = "#${entry.number}",
+                fontFamily = RubricMono,
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            )
+
             Box(
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(100.dp)  // Adjusted size from 120.dp to 100.dp
                     .align(Alignment.CenterHorizontally)
             ) {
                 AsyncImage(
@@ -236,27 +272,37 @@ fun PokeDexEntry(modifier: Modifier = Modifier, entry: PokedexListEntry, navCont
                         .crossfade(true)
                         .build(),
                     contentDescription = entry.pokemonName,
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,  // Changed from Crop to Fit
                     modifier = Modifier.fillMaxSize(),
                     onSuccess = { state ->
                         val drawable = state.result.drawable
                         viewModel.CalcDominantColor(drawable) { dominantColor = it }
-                        isLoading=false
+                        isLoading = false
                     },
-                    onLoading = {isLoading=true}
+                    onLoading = { isLoading = true }
                 )
 
-                if (isLoading){
+                if (isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center),
                         color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 2.dp
                     )
                 }
-
             }
+
             Spacer(Modifier.height(4.dp))
-            Text(text = entry.pokemonName, fontFamily = RubricMono, fontWeight = FontWeight.Medium, fontSize = 16.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+
+            // Pokemon Name
+            Text(
+                text = entry.pokemonName,
+                fontFamily = RubricMono,
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1
+            )
         }
     }
 }
@@ -270,13 +316,21 @@ fun PokeDexRow(
 ) {
     Column {
         Row {
-            PokeDexEntry(
-                entry = entries[rowIndex * 2],
-                navController = navController,
-                modifier = Modifier.weight(1f)
-            )
+            // First Pokemon in the row
+            if (rowIndex * 2 < entries.size) {
+                PokeDexEntry(
+                    entry = entries[rowIndex * 2],
+                    navController = navController,
+                    modifier = Modifier.weight(1f)
+                )
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+
             Spacer(modifier = Modifier.width(16.dp))
-            if(entries.size >= rowIndex * 2 + 2) {
+
+            // Second Pokemon in the row
+            if (rowIndex * 2 + 1 < entries.size) {
                 PokeDexEntry(
                     entry = entries[rowIndex * 2 + 1],
                     navController = navController,
