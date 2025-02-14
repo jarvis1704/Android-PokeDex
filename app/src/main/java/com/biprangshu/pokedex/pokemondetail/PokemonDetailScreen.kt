@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -55,6 +56,7 @@ import coil.request.ImageRequest
 import com.biprangshu.pokedex.R
 import com.biprangshu.pokedex.remote.responses.Pokemon
 import com.biprangshu.pokedex.remote.responses.Type
+import com.biprangshu.pokedex.ui.theme.RubricMono
 import com.biprangshu.pokedex.ui.theme.RussoOne
 import com.biprangshu.pokedex.ui.theme.TypeFighting
 import com.biprangshu.pokedex.util.Resource
@@ -75,7 +77,7 @@ fun PokemonDetailScreen(modifier: Modifier = Modifier, dominantColor: Color, nav
         modifier= Modifier
             .fillMaxSize()
             .background(color = dominantColor)
-            .navigationBarsPadding()
+            .navigationBarsPadding().padding(bottom = 32.dp)
     ) {
         PokemonDetailHeader(navController = navController)
         PokemonDetailWrapper(
@@ -118,7 +120,7 @@ fun PokemonDetailHeader(modifier: Modifier = Modifier, navController: NavControl
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color.Transparent),
+            .background(Color.Transparent).statusBarsPadding().padding(16.dp),
         horizontalArrangement = Arrangement.Start
     ) {
         Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = "Back Arrow", tint = Color.White, modifier = Modifier
@@ -168,10 +170,11 @@ fun PokemonDetailSection(
     ) {
         Text(
             text = "#${pokemonInfo.id} ${pokemonInfo.name.capitalize(Locale.ROOT)}",
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 24.sp,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
+            fontFamily = RubricMono
         )
         PokemonTypeSection(types = pokemonInfo.types)
         PokemonDetailDataSection(
