@@ -100,6 +100,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.firebase.messaging)
+    implementation(libs.androidx.core.splashscreen)
     kapt(libs.hilt.compiler)
 
     debugImplementation(libs.androidx.ui.tooling)
