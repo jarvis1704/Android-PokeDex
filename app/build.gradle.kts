@@ -20,16 +20,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        create("release") {
-            // You'll need to provide these values from a secure location
-            // like environment variables or a separate properties file
-            storeFile = file("your-release-key.jks")
-            storePassword = "your-store-password"
-            keyAlias = "your-key-alias"
-            keyPassword = "your-key-password"
-        }
-    }
+
 
     buildTypes {
         release {
@@ -39,11 +30,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")  // Changed to release signing
+             // Changed to release signing
         }
         debug {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -69,6 +59,10 @@ android {
             excludes += "META-INF/ASL2.0"
             excludes += "META-INF/*.kotlin_module"
         }
+    }
+    packagingOptions {
+        pickFirst("META-INF/LICENSE.md")
+        pickFirst("META-INF/LICENSE-notice.md")
     }
 }
 
@@ -101,6 +95,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.firebase.messaging)
     implementation(libs.androidx.core.splashscreen)
+    testImplementation(libs.junit.jupiter)
+    androidTestImplementation(libs.junit.jupiter)
     kapt(libs.hilt.compiler)
 
     debugImplementation(libs.androidx.ui.tooling)
@@ -121,4 +117,18 @@ dependencies {
     implementation("androidx.palette:palette-ktx:1.0.0")
 
     implementation (libs.androidx.navigation.compose.v277)
+
+    testImplementation("com.google.dagger:hilt-android-testing:2.48")
+    kaptTest("com.google.dagger:hilt-compiler:2.48")
+
+    testFixturesImplementation("com.google.dagger:hilt-android-testing:2.48")
+    kaptTestFixtures("com.google.dagger:hilt-compiler:2.48")
+
+    androidTestImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+}
+
+kapt {
+    correctErrorTypes = true
 }
