@@ -24,13 +24,13 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true  // Added resource shrinking
+            isMinifyEnabled = false
+            isShrinkResources = false // Added resource shrinking
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-             // Changed to release signing
+
         }
         debug {
             isMinifyEnabled = false
