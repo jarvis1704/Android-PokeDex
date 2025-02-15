@@ -91,4 +91,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
 
     implementation("androidx.palette:palette-ktx:1.0.0")
+
+    implementation (libs.androidx.navigation.compose.v277)
 }
