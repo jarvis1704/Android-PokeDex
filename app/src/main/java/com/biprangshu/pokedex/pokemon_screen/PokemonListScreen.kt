@@ -89,7 +89,7 @@ fun PokemonListScreen(modifier: Modifier = Modifier, navController: NavControlle
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
                 Image(painter = painterResource(R.drawable.pokedex_logo), contentDescription = "Pokedex Logo")
-                IconButton(onClick = {}) {
+                IconButton(onClick = {navController.navigate(route = "pokemon_settings_screen")}) {
                     Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
                 }
             }
