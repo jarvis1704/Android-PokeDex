@@ -86,7 +86,7 @@ fun SettingsScreen(darkTheme: Boolean,navController: NavController, onThemeChang
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth().clickable {
-
+                            navController.navigate(route = "pokemon_about_screen")
                         }
                     ) {
                         Text("About the App", fontFamily = RubricMono, fontWeight = FontWeight.Normal, color = MaterialTheme.colorScheme.onSurface)

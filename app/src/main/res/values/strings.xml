@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PokeDex</string>
+    <string name="what_is_this_app">This app started as a fun project, just to explore the world of Android. However, This app has now become one of my favourite app and also the experiment place for all type of UI tricks which I can implement here. Constantly will update this app to make it more smooth and beautiful.</string>
 </resources>
