@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.biprangshu.pokedex.pokemon_screen.PokemonListScreen
 import com.biprangshu.pokedex.pokemondetail.PokemonDetailScreen
+import com.biprangshu.pokedex.settings.AboutUsScreen
 import com.biprangshu.pokedex.settings.SettingsScreen
 import com.biprangshu.pokedex.ui.theme.PokeDexTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -209,7 +210,9 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     ){
-
+                        AboutUsScreen(
+                            navController = navController
+                        )
                     }
                 }
             }

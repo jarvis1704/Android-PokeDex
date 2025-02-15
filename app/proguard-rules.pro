@@ -19,3 +19,26 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep Retrofit
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class retrofit2.** { *; }
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
+
+# Keep Gson
+-keep class com.google.gson.** { *; }
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+# Keep your data models
+-keep class com.biprangshu.pokedex.data.** { *; }
+-keep class com.biprangshu.pokedex.domain.** { *; }
+
+# Keep Hilt
+-keep class dagger.hilt.** { *; }
+-keep class javax.inject.** { *; }
+-keep class * extends dagger.hilt.android.lifecycle.HiltViewModel
