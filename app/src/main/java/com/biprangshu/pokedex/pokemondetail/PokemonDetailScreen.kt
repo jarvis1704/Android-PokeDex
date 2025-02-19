@@ -1,5 +1,6 @@
 package com.biprangshu.pokedex.pokemondetail
 
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -289,7 +290,8 @@ fun PokemonStat(
         } else 0f,
         animationSpec = tween(
             animDuration,
-            animDelay
+            animDelay,
+            easing = FastOutSlowInEasing
         )
     )
     LaunchedEffect(key1 = true) {

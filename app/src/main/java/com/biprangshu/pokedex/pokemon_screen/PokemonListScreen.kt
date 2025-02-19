@@ -1,5 +1,10 @@
 package com.biprangshu.pokedex.pokemon_screen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +26,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -42,6 +48,7 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +63,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -73,7 +81,12 @@ import com.biprangshu.pokedex.viewmodels.PokemonListViewmodel
 
 
 @Composable
-fun PokemonListScreen(modifier: Modifier = Modifier, navController: NavController, viewModel: PokemonListViewmodel= hiltViewModel()) {
+fun PokemonListScreen(modifier: Modifier = Modifier, navController: NavController, viewModel: PokemonListViewmodel = hiltViewModel()) {
+    val listState = rememberLazyListState()
+    val scrolledUp by remember {
+        derivedStateOf { listState.firstVisibleItemIndex <= 0 }
+    }
+
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
@@ -82,22 +95,87 @@ fun PokemonListScreen(modifier: Modifier = Modifier, navController: NavControlle
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
-                .padding(16.dp)
+                .navigationBarsPadding()
         ) {
-            Row(
-                modifier= Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ){
-                Image(painter = painterResource(R.drawable.pokedex_logo), contentDescription = "Pokedex Logo")
-                IconButton(onClick = {navController.navigate(route = "pokemon_settings_screen")}) {
-                    Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
-                }
-            }
-            Spacer(Modifier.height(8.dp))
-            SearchBar(onSearch = {viewModel.SearchPokemon(it)})
-            Spacer(Modifier.height(16.dp))
-            PokemonList(navController = navController)
+            DynamicHeader(navController = navController, scrolledUp = scrolledUp, onSearch = { viewModel.SearchPokemon(it) })
+
+            PokemonList(navController = navController, listState = listState)
         }
+    }
+}
+
+@Composable
+fun DynamicHeader(navController: NavController, scrolledUp: Boolean, onSearch: (String) -> Unit) {
+    val headerHeightExpanded = 150.dp
+    val headerHeightCollapsed = 56.dp // Standard TopAppBar height
+    val headerHeight by animateDpAsState(
+        targetValue = if (scrolledUp) headerHeightExpanded else headerHeightCollapsed,
+        animationSpec = tween(durationMillis = 300)
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(headerHeight)
+            .background(MaterialTheme.colorScheme.background) // Ensure header background is consistent
+    ) {
+        AnimatedVisibility(
+            visible = scrolledUp,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            ExpandedHeaderContent(navController = navController, onSearch = onSearch)
+        }
+        AnimatedVisibility(
+            visible = !scrolledUp,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            CollapsedHeaderContent()
+        }
+    }
+}
+
+@Composable
+fun ExpandedHeaderContent(navController: NavController, onSearch: (String) -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.SpaceAround
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(R.drawable.pokedex_logo),
+                contentDescription = "Pokedex Logo",
+                modifier = Modifier.height(40.dp) // Adjust logo height as needed
+            )
+            IconButton(onClick = { navController.navigate(route = "pokemon_settings_screen") }) {
+                Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
+            }
+        }
+        SearchBar(onSearch = onSearch)
+    }
+}
+
+@Composable
+fun CollapsedHeaderContent() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center // Align text to start for collapsed header
+    ) {
+        Text(
+            text = "Pokedex",
+            fontFamily = RubricMono,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
     }
 }
 
@@ -132,7 +210,7 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit = {}) {
             }
         },
         trailingIcon = {
-            if(text.isNotEmpty()) {
+            if (text.isNotEmpty()) {
                 IconButton(
                     onClick = {
                         text = ""
@@ -220,7 +298,8 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit = {}) {
 fun PokemonList(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: PokemonListViewmodel = hiltViewModel()
+    viewModel: PokemonListViewmodel = hiltViewModel(),
+    listState: androidx.compose.foundation.lazy.LazyListState = rememberLazyListState()
 ) {
     val pokemonList by remember { viewModel.pokemonList }
     val isEndReached by remember { viewModel.isEndReached }
@@ -229,7 +308,9 @@ fun PokemonList(
     val isSearching by remember { viewModel.isSearching }
 
     LazyColumn(
-        contentPadding = PaddingValues(8.dp)
+        contentPadding = PaddingValues(8.dp),
+        state = listState,
+        modifier = Modifier.fillMaxSize() // Ensure LazyColumn fills available space
     ) {
         val itemCount = pokemonList.size
         items(count = (itemCount + 1) / 2) { rowIndex ->
@@ -263,17 +344,21 @@ fun PokemonList(
             }
             Spacer(modifier = Modifier.height(16.dp))
         }
-    }
 
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        if (isLoading) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-        } else if (loadError.isNotEmpty()) {
-            RetrySection(error = loadError) {
-                viewModel.LoadPokemonPaginated()
+        item {
+            if (isLoading) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                }
+            } else if (loadError.isNotEmpty()) {
+                RetrySection(error = loadError) {
+                    viewModel.LoadPokemonPaginated()
+                }
             }
         }
     }
@@ -414,14 +499,24 @@ fun PokeDexRow(
 }
 
 @Composable
-fun RetrySection(modifier: Modifier = Modifier, error: String, onRetry: ()-> Unit) {
+fun RetrySection(modifier: Modifier = Modifier, error: String, onRetry: () -> Unit) {
     Column {
         Text(text = error, fontSize = 16.sp, fontFamily = RussoOne)
         Spacer(Modifier.height(8.dp))
-        Button(onClick = { onRetry() }, modifier = Modifier.align(Alignment.CenterHorizontally), colors = ButtonDefaults.buttonColors(
-            TypeGrass
-        )) {
-            Text("Retry", fontSize = 16.sp, fontFamily = RussoOne, fontWeight = FontWeight.Bold, color = Color.DarkGray)
+        Button(
+            onClick = { onRetry() },
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            colors = ButtonDefaults.buttonColors(
+                TypeGrass
+            )
+        ) {
+            Text(
+                "Retry",
+                fontSize = 16.sp,
+                fontFamily = RussoOne,
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray
+            )
         }
     }
 }
