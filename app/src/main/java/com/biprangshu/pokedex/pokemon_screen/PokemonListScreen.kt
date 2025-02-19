@@ -202,7 +202,12 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit = {}) {
         placeholder = { Text("Search for Pokemon") },
         leadingIcon = {
             if (active) {
-                IconButton(onClick = { active = false }) {
+                IconButton(onClick = {
+                    active = false
+                    onSearch("")
+                    text=""
+                }
+                ) {
                     Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                 }
             } else {
