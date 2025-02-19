@@ -49,26 +49,26 @@ class MainActivity : ComponentActivity() {
                     enterTransition = {
                         slideIntoContainer(
                             towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(300)
-                        ) + fadeIn(animationSpec = tween(300))
+                            animationSpec = tween(500)
+                        ) + fadeIn(animationSpec = tween(500))
                     },
                     exitTransition = {
                         slideOutOfContainer(
                             towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(300)
-                        ) + fadeOut(animationSpec = tween(300))
+                            animationSpec = tween(500)
+                        ) + fadeOut(animationSpec = tween(500))
                     },
                     popEnterTransition = {
                         slideIntoContainer(
                             towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(300)
-                        ) + fadeIn(animationSpec = tween(300))
+                            animationSpec = tween(500)
+                        ) + fadeIn(animationSpec = tween(500))
                     },
                     popExitTransition = {
                         slideOutOfContainer(
                             towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(300)
-                        ) + fadeOut(animationSpec = tween(300))
+                            animationSpec = tween(500)
+                        ) + fadeOut(animationSpec = tween(500))
                     }
                 ){
                     composable(
@@ -76,25 +76,25 @@ class MainActivity : ComponentActivity() {
                         enterTransition = {
                             slideIntoContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         exitTransition = {
                             slideOutOfContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         popEnterTransition = {
                             slideIntoContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         popExitTransition = {
                             slideOutOfContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         }
                     ){
@@ -114,25 +114,25 @@ class MainActivity : ComponentActivity() {
                         enterTransition = {
                             slideIntoContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         exitTransition = {
                             slideOutOfContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         popEnterTransition = {
                             slideIntoContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         popExitTransition = {
                             slideOutOfContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         }
                     ){
@@ -156,25 +156,25 @@ class MainActivity : ComponentActivity() {
                         enterTransition = {
                             slideIntoContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         exitTransition = {
                             slideOutOfContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         popEnterTransition = {
                             slideIntoContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         popExitTransition = {
                             slideOutOfContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         }
                     ){
@@ -188,25 +188,25 @@ class MainActivity : ComponentActivity() {
                         enterTransition = {
                             slideIntoContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         exitTransition = {
                             slideOutOfContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         popEnterTransition = {
                             slideIntoContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         },
                         popExitTransition = {
                             slideOutOfContainer(
                                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                                animationSpec = tween(300)
+                                animationSpec = tween(500)
                             )
                         }
                     ){
